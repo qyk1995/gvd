@@ -4,10 +4,11 @@ import (
 	"fmt"
 
 	"example.com/m/api"
+	global "example.com/m/global"
 	"example.com/m/model"
-
 	"example.com/m/utils"
 	"github.com/gin-gonic/gin"
+	"github.com/go-redis/redis/v8"
 )
 
 type BaseApi struct{}
@@ -52,7 +53,7 @@ func (b *BaseApi) Login(c *gin.Context) {
 
 func (b *BaseApi) tokenNext(c *gin.Context, user model.SysUser) {
 	j := &utils.JWT{SigningKey: []byte(global.GVA_CONFIG.JWT.SigningKey)} // 唯一签名
-	claims := j.CreateClaims(systemReq.BaseClaims{
+	claims := j.CreateClaims(utils.BaseClaims{
 		UUID:     user.UUID,
 		ID:       user.ID,
 		Username: user.Username,
@@ -63,7 +64,7 @@ func (b *BaseApi) tokenNext(c *gin.Context, user model.SysUser) {
 		return
 	}
 	if !global.GVA_CONFIG.System.UseMultipoint {
-		utils.OkWithDetailed(systemRes.LoginResponse{
+		utils.OkWithDetailed(uint.LoginResponse{
 			User:      user,
 			Token:     token,
 			ExpiresAt: claims.StandardClaims.ExpiresAt * 1000,
