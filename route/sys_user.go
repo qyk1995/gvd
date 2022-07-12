@@ -13,6 +13,8 @@ func InitUserRouter() (route *gin.Engine) {
 	baseApi := service.BaseApi{}
 	{
 		v1.POST("user_register", baseApi.Register)
+		v1.POST("user_login", baseApi.Login)
+
 		// userRouterWithoutRecord.POST("user_login", baseApi.Login) //
 
 	}
